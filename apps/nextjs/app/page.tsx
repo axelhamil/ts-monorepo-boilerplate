@@ -7,6 +7,10 @@ export default async function Home(): Promise<ReactNode> {
 
   const serverOK = status === 200;
 
+  if (!user) {
+    return <div>User not found</div>;
+  }
+
   if (!serverOK) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen p-8">
@@ -55,7 +59,7 @@ export default async function Home(): Promise<ReactNode> {
                 <span className="text-xl text-white">
                   {user.name
                     .split(" ")
-                    .map((n) => n[0])
+                    .map((n: string) => n[0])
                     .join("")}
                 </span>
               </div>

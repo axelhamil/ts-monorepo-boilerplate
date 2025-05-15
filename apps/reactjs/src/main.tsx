@@ -4,82 +4,105 @@ import { useGetUserQuery } from "./libs/api/useGetUserQuery";
 import { Providers } from "./libs/providers";
 
 function App(): ReactElement {
-  const { data, status, isLoading } = useGetUserQuery();
+  const { data: user, status } = useGetUserQuery();
 
   const serverOK = status === "success";
 
-  if (!serverOK || isLoading) {
+  if (!user) {
+    return <div>User not found</div>;
+  }
+
+  if (!serverOK) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
-        <div className="rounded-lg bg-white p-8 shadow-lg">
-          <div className="mb-6 text-center">
-            <span className="block text-5xl">🔌</span>
-          </div>
-          <h2 className="mb-3 text-2xl font-bold tracking-tight text-gray-900">
-            Server unavailable
-          </h2>
-          <p className="text-gray-600">
-            Please verify that the server is running.
-          </p>
-        </div>
+      <div className="flex flex-col items-center justify-center min-h-screen p-8">
+        <div className="text-4xl mb-4">🔌</div>
+        <h2 className="text-2xl font-semibold text-gray-900 mb-2">
+          Serveur inaccessible
+        </h2>
+        <p className="text-gray-600">
+          Veuillez vérifier que le serveur est en cours d'exécution.
+        </p>
       </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-gray-50 to-white px-4 py-16">
-      <div className="mx-auto max-w-4xl">
-        <div className="mb-12 text-center">
-          <h1 className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
-            React Boilerplate
-          </h1>
-          <p className="mt-4 text-lg text-gray-900">
-            A modern and optimized starting point for your React applications
-          </p>
+    <main className="min-h-screen flex flex-col items-center justify-center p-8 bg-gray-50">
+      <div className="max-w-3xl text-center space-y-6">
+        <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
+          React Boilerplate
+        </h1>
+        <p className="text-xl text-gray-600">
+          Un point de départ moderne et optimisé pour vos applications React
+        </p>
+        <div className="flex flex-col gap-4 sm:flex-row justify-center">
+          <a
+            href="https://react.dev"
+            className="px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Documentation React
+          </a>
+          <a
+            href="https://github.com/axelhamil/ts-monorepo-boilerplate"
+            className="px-6 py-3 bg-white text-black border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Code Source
+          </a>
         </div>
-
-        <div className="overflow-hidden rounded-xl bg-white shadow-xl ring-1 ring-gray-200">
-          <div className="p-6">
+        <div className="p-6 bg-white rounded-lg shadow border">
+          <div className="space-y-4">
             <div className="flex items-center gap-4">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r from-blue-500 to-indigo-500">
-                <span className="text-xl font-medium text-white">
-                  {data?.name?.toUpperCase()}
+              <div className="h-12 w-12 rounded-full bg-blue-500 flex items-center justify-center">
+                <span className="text-xl text-white">
+                  {user.name
+                    .split(" ")
+                    .map((n: string) => n[0])
+                    .join("")}
                 </span>
               </div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900">
-                  {data?.name}
-                </h3>
-                <p className="text-gray-900">{data?.email}</p>
+                <h3 className="font-medium">{user.name}</h3>
+                <p className="text-gray-600">{user.email}</p>
               </div>
             </div>
 
-            <div className="mt-6 rounded-lg bg-gray-50 p-4">
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-gray-900">ID:</span>
-                <code className="rounded bg-white px-2 py-1 text-sm font-mono text-gray-900 ring-1 ring-gray-200">
-                  {data?.id}
+            <div className="space-y-3 bg-gray-50 rounded p-4 text-sm">
+              <div className="flex gap-2">
+                <span className="text-gray-700">ID:</span>
+                <code className="px-2 py-1 bg-white rounded border">
+                  {user.id}
                 </code>
               </div>
             </div>
 
-            <div className="mt-6 border-t border-gray-100 pt-4">
-              {serverOK ? (
-                <p className="flex items-center gap-2 text-sm font-medium text-emerald-600">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-emerald-100">
-                    ✓
-                  </span>
-                  Server is accessible
-                </p>
-              ) : (
-                <p className="flex items-center gap-2 text-sm font-medium text-red-600">
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-red-100">
-                    ✕
-                  </span>
-                  Server is not accessible
-                </p>
-              )}
+            <div className="flex gap-2">
+              <span className="text-gray-700">Créé le:</span>
+              <code className="px-2 py-1 bg-white rounded border">
+                {new Date(user.createdAt).toLocaleDateString()}
+              </code>
             </div>
+            <div className="flex gap-2">
+              <span className="text-gray-700">Mis à jour le:</span>
+              <code className="px-2 py-1 bg-white rounded border">
+                {new Date(user.updatedAt).toLocaleDateString()}
+              </code>
+            </div>
+
+            {serverOK ? (
+              <p className="flex items-center gap-2 text-sm text-green-600">
+                <span>✅</span>
+                Le serveur est accessible
+              </p>
+            ) : (
+              <p className="flex items-center gap-2 text-sm text-red-600">
+                <span>❌</span>
+                Le serveur n'est pas accessible
+              </p>
+            )}
           </div>
         </div>
       </div>

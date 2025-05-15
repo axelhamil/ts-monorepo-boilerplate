@@ -1,11 +1,16 @@
 {
   "$schema": "https://turbo.build/schema.json",
-  "globalDependencies": ["**/.env*"],
 
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"]
+      "outputs": [
+        "dist/**",
+        ".next/**",
+        "!.next/cache/**",
+        ".next/types/**",
+        "build/**"
+      ]
     },
     "lint": {
       "dependsOn": ["^lint"],
@@ -13,13 +18,22 @@
     },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": ["^db:generate"]
+    },
+    "start": {
+      "dependsOn": ["build"],
+      "cache": false
     },
     "test": {
       "dependsOn": ["^build"],
       "outputs": ["coverage/**"]
     },
     "type-check": {
+      "dependsOn": ["^db:generate"],
+      "outputs": ["next-env.d.ts", ".next/types/**"]
+    },
+    "format": {
       "outputs": []
     },
     "clean": {
@@ -35,7 +49,8 @@
       "cache": false
     },
     "db:migrate": {
-      "cache": false
+      "cache": false,
+      "outputs": ["drizzle/migrations/**"]
     }
   }
 }

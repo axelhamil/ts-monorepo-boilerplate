@@ -1,10 +1,11 @@
-import type { User } from "@packages/libs";
+import type { HttpResponse } from "@packages/libs";
 
-export const getUser = async (): Promise<{
-  data: User;
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const getUser = async <T = any>(): Promise<{
+  data: T | null;
   status: number;
 }> => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1`, {
     cache: "no-store",
   });
 
@@ -12,8 +13,10 @@ export const getUser = async (): Promise<{
     throw new Error("Failed to fetch user");
   }
 
+  const res = (await response.json()) as HttpResponse<T>;
+
   return {
-    data: await response.json(),
+    data: res.data,
     status: response.status,
   };
 };

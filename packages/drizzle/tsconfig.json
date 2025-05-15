@@ -1,7 +1,6 @@
 {
   "extends": "@packages/typescript-config/base.json",
   "compilerOptions": {
-    "lib": ["ES2015"],
     "module": "CommonJS",
     "outDir": "./dist",
     "baseUrl": ".",

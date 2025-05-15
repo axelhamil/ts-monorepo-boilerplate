@@ -10,7 +10,13 @@ import type { FastifyInstance } from "fastify";
 // }
 
 export const v1Router = async (fastify: FastifyInstance): Promise<void> => {
-  fastify.get("/health", async () => {
-    return { status: "ok" };
+  fastify.get("/", async () => {
+    return {
+      id: "1",
+      name: "John Doe",
+      email: "john@example.com",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
   });
 };

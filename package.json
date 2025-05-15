@@ -19,7 +19,7 @@
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
     "husky": "^9.1.7",
-    "turbo": "latest"
+    "turbo": "^2.5.3"
   },
   "packageManager": "pnpm@10.6.3",
   "engines": {

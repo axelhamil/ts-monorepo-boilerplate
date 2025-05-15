@@ -29,7 +29,14 @@ export const fastify = Fastify({
 });
 
 fastify.register(cors, {
-  origin: env.CORS_ORIGIN,
+  origin: (origin, cb): void => {
+    const allowedOrigins = env.CORS_ORIGIN.split(",").map((o) => o.trim());
+    if (!origin || allowedOrigins.includes(origin)) {
+      cb(null, true);
+      return;
+    }
+    cb(new Error("Not allowed by CORS"), false);
+  },
   methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Authorization", "Content-Type"],
 });
